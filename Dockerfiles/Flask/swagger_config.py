@@ -27,11 +27,11 @@ def bind_swagger(flask_app: Flask):
     )
 
     swagger_blueprint = Blueprint(
-        "swagger_blueprint", __name__, url_prefix="/docs",
-        template_folder=str(
-            Path(str(Path.cwd()) + "/docs/templates")),
-        static_folder=str(
-            Path(str(Path.cwd()) + "/docs/static"))
+        "swagger_blueprint",
+        __name__,
+        url_prefix="/docs",
+        template_folder=str(Path(f"{str(Path.cwd())}/docs/templates")),
+        static_folder=str(Path(f"{str(Path.cwd())}/docs/static")),
     )
 
     @swagger_blueprint.route("/", methods=["GET"])

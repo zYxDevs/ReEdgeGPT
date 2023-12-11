@@ -12,8 +12,8 @@ class BrowserView(QWebEngineView):
     def __init__(self, start_url: str = "https://www.google.com/"):
         super().__init__()
         self.setUrl(start_url)
-        self.download_list: List[QWebEngineDownloadRequest] = list()
-        self.download_window_list: List[BrowserDownloadWindow] = list()
+        self.download_list: List[QWebEngineDownloadRequest] = []
+        self.download_window_list: List[BrowserDownloadWindow] = []
         self.page().profile().downloadRequested.connect(self.download_file)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 

@@ -86,13 +86,15 @@ class Chatbot:
                 )
                 if messages_left == 0:
                     raise Exception("Max messages reached")
-                message = ""
-                for msg in reversed(response["item"]["messages"]):
-                    if msg.get("adaptiveCards") and msg["adaptiveCards"][0]["body"][
-                        0
-                    ].get("text"):
-                        message = msg
-                        break
+                message = next(
+                    (
+                        msg
+                        for msg in reversed(response["item"]["messages"])
+                        if msg.get("adaptiveCards")
+                        and msg["adaptiveCards"][0]["body"][0].get("text")
+                    ),
+                    "",
+                )
                 if not message:
                     raise Exception("No message found")
                 suggestions = [

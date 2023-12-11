@@ -149,10 +149,10 @@ class ImageGen:
             # if rt4 fails, try rt3
             url = f"{BING_URL}/images/create?q={url_encoded_prompt}&rt=3&FORM=GUH2CR"
             response = self.session.post(url, allow_redirects=False, timeout=timeout)
-            if response.status_code != 302:
-                print("Image create failed pls check cookie or old image still creating", flush=True)
-                return
-                # Get redirect URL
+        if response.status_code != 302:
+            print("Image create failed pls check cookie or old image still creating", flush=True)
+            return
+            # Get redirect URL
         redirect_url = response.headers["Location"].replace("&nfy=1", "")
         request_id = redirect_url.split("id=")[-1]
         self.session.get(f"{BING_URL}{redirect_url}")
@@ -177,14 +177,12 @@ class ImageGen:
                 if self.debug_file:
                     self.debug(f"ERROR: {error_noresults}")
                 raise Exception(error_noresults)
-            if not response.text or response.text.find("errorMessage") != -1:
-                time.sleep(1)
-                time_sec = time_sec + 1
-                if time_sec >= max_generate_time_sec:
-                    raise TimeoutError("Out of generate time")
-                continue
-            else:
+            if response.text and response.text.find("errorMessage") == -1:
                 break
+            time.sleep(1)
+            time_sec = time_sec + 1
+            if time_sec >= max_generate_time_sec:
+                raise TimeoutError("Out of generate time")
         # Use regex to search for src=""
         image_links = regex.findall(r'src="([^"]+)"', response.text)
         # Remove size limit
@@ -228,12 +226,10 @@ class ImageGen:
             os.mkdir(output_dir)
         try:
             fn = f"{file_name}_" if file_name else ""
-            jpeg_index = 0
-
             if download_count:
                 links = links[:download_count]
 
-            for link in links:
+            for jpeg_index, link in enumerate(links):
                 while os.path.exists(
                         os.path.join(output_dir, f"{fn}{jpeg_index}.jpeg")
                 ):
@@ -246,8 +242,6 @@ class ImageGen:
                         os.path.join(output_dir, f"{fn}{jpeg_index}.jpeg"), "wb"
                 ) as output_file:
                     output_file.write(response.content)
-                jpeg_index += 1
-
         except requests.exceptions.MissingSchema as url_exception:
             raise Exception(
                 "Inappropriate contents found in the generated images. Please try again or try another prompt.",

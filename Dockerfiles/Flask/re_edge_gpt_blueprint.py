@@ -13,7 +13,11 @@ bot = {
 
 
 async def setup_chatbot():
-    cookies = json.loads(open(str(Path(str(Path.cwd()) + "bing_cookies.json")), encoding="utf-8").read())
+    cookies = json.loads(
+        open(
+            str(Path(f"{str(Path.cwd())}bing_cookies.json")), encoding="utf-8"
+        ).read()
+    )
     chatbot = await Chatbot.create(cookies=cookies)
     bot.update({"chatbot": chatbot})
     return chatbot
