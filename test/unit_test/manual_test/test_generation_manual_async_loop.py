@@ -22,7 +22,7 @@ async def test_generate_image_async():
 
 if __name__ == "__main__":
     try:
-        for i in range(3):
+        for _ in range(3):
             # Make dir to save image
             Path("test_output").mkdir(exist_ok=True)
             # Generate image async

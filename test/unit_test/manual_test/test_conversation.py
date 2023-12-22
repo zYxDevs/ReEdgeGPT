@@ -14,8 +14,12 @@ conversation_dict = {}
 async def test_ask() -> None:
     bot = None
     try:
-        cookies: list[dict] = json.loads(open(
-            str(Path(str(Path.cwd()) + "/bing_cookies.json")), encoding="utf-8").read())
+        cookies: list[dict] = json.loads(
+            open(
+                str(Path(f"{str(Path.cwd())}/bing_cookies.json")),
+                encoding="utf-8",
+            ).read()
+        )
         bot = await Chatbot.create(cookies=cookies)
         response = await bot.ask(
             prompt="Translate next word what I say to english",
@@ -36,8 +40,12 @@ async def test_ask() -> None:
 async def test_ask_conversation() -> None:
     bot = None
     try:
-        cookies: list[dict] = json.loads(open(
-            str(Path(str(Path.cwd()) + "/bing_cookies.json")), encoding="utf-8").read())
+        cookies: list[dict] = json.loads(
+            open(
+                str(Path(f"{str(Path.cwd())}/bing_cookies.json")),
+                encoding="utf-8",
+            ).read()
+        )
         bot = await Chatbot.create(cookies=cookies)
         await bot.chat_hub.set_conversation(conversation_dict=conversation_dict)
         response = await bot.ask(
